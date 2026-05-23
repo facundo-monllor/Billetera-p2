@@ -56,6 +56,10 @@ public abstract class Cuenta {
     // Metodos
     public abstract void operar();
 
+    public void validarLimiteRecepcion(Double montoAAcreditar) {
+    // Por defecto no hace nada. Las cuentas sin límite usarán este comportamiento.
+}
+
     // public List<Double> obtenerComisiones() {
     // }
 

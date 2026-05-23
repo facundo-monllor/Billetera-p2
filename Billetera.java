@@ -121,6 +121,7 @@ public class Billetera {
     }
 
     public void realizarTransferencia(String cvuOrigen, String cvuDestino, double monto){
+        if (monto <= 0) throw new IllegalArgumentException("El monto a transferir debe ser mayor a cero");
         Cuenta cuentaOrigen = null;
         Cuenta cuentaDestino = null;
         Usuario usuarioDestino = null;
@@ -138,6 +139,7 @@ public class Billetera {
         
         if(cuentaOrigen == null) throw new RuntimeException("La cuenta origen no existe");
         if(cuentaDestino == null) throw new RuntimeException("La cuenta destino no existe");
+        cuentaDestino.validarLimiteRecepcion(monto);
         Boolean esAprobada = monto <= cuentaOrigen.getSaldo();
 
         Transferencia transferencia = new Transferencia(monto, cvuOrigen, cvuDestino,usuarioDestino.getDNI(), esAprobada);
