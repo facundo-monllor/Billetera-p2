@@ -1,7 +1,9 @@
-package ar.edu.ungs.billetera;
+// package ar.edu.ungs.billetera;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import Diagrama.Billetera;
 
 import java.time.LocalDate;
 import java.util.List;

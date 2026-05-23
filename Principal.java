@@ -1,7 +1,9 @@
-package ar.edu.ungs.billetera;
+// package ar.edu.ungs.billetera;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import Diagrama.Billetera;
 
 public class Principal {
 
