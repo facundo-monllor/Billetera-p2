@@ -418,7 +418,7 @@ public class Billetera {
                 }
             }
         }
-        throw new RuntimeException("El alias no fue encontrado");
+        throw new IllegalArgumentException("El CVU no fue encontrado");
     }
 
     public void registrarEmpresa(String cuit, String nombreFantasia, String telefono, String email, String nombreContacto){
