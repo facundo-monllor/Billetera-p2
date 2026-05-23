@@ -1,6 +1,4 @@
-package Diagrama;
 
-import java.util.UUID;
 import java.util.Random;
 
 public abstract class Operacion {

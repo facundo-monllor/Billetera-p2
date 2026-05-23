@@ -1,6 +1,4 @@
-package Diagrama;
 
-import java.time.LocalDate;
 
 public class InversionVinculadaDivisa extends Inversion{
     
@@ -13,7 +11,7 @@ public class InversionVinculadaDivisa extends Inversion{
         if (divisa == null || divisa.isEmpty()) throw new RuntimeException("La divisa es obligatoria");
         if (tasa == null) throw new RuntimeException("La tasa es obligatoria");
 
-        // this.tasaInteresDivisa = Utilitarios.consultarCotizacion(divisa); // 1000
+        this.tasaInteresDivisa = Utilitarios.consultarCotizacion(divisa);
         this.nombreDivisa = divisa;
     }
 

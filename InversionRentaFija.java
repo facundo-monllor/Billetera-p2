@@ -1,4 +1,3 @@
-package Diagrama;
 
 public class InversionRentaFija extends Inversion{
     
@@ -7,7 +6,6 @@ public class InversionRentaFija extends Inversion{
     // Constructor
     public InversionRentaFija(double monto, int plazoDias, Boolean estado) {
         super(plazoDias, monto, true, estado);
-        if (tasaInteres == null) throw new RuntimeException("El monto es obligatorio");
 
         // this.tasaInteres = Utilitarios.consultarCotizacion();
         this.tasaInteres = 100.00;

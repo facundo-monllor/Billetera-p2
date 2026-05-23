@@ -1,4 +1,3 @@
-package Diagrama;
 
 import java.time.LocalDate;
 
@@ -13,13 +12,12 @@ public abstract class Inversion extends Operacion{
     // Constructor
     public Inversion(Integer plazo, Double monto, Boolean esPrecancelable, Boolean estado) {
         super("Inversion", estado);
-        if (fechaConstitucion == null) throw new RuntimeException("La fecha es obligatoria");
         if (plazo == null) throw new RuntimeException("El plazo es obligatorio");
-        if (montoInvertido == null) throw new RuntimeException("El monto es obligatorio");
+        if (monto == null) throw new RuntimeException("El monto es obligatorio");
 
-        // this.fechaConstitucion = Utilitarios.hoy();
+        this.fechaConstitucion = Utilitarios.hoy();
         this.plazo = plazo;
-        this.montoInvertido = montoInvertido;
+        this.montoInvertido = monto;
         this.esPrecancelable = esPrecancelable;
         this.cobrada = false;
     }

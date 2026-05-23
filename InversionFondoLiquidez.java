@@ -1,4 +1,3 @@
-package Diagrama;
 
 public class InversionFondoLiquidez extends Inversion{
     

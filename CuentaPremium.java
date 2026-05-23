@@ -1,4 +1,3 @@
-package Diagrama;
 
 public class CuentaPremium extends Cuenta{
     
@@ -6,7 +5,7 @@ public class CuentaPremium extends Cuenta{
 
     // Constructor 
     public CuentaPremium(String alias, double depositoInicial) {
-        super(alias);
+        super(alias, depositoInicial);
         if(depositoInicial < montoMinimo) throw new RuntimeException("El Monto minimo es $500.000");
     }
     

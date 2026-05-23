@@ -1,10 +1,6 @@
-package Diagrama;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Cuenta {
     
@@ -15,11 +11,16 @@ public abstract class Cuenta {
 
     // Constructor
     public Cuenta(String alias) {
-        if (alias == null || alias.isEmpty()) throw new RuntimeException("El alias es obligatorio");
+        this(alias, 0.00);
+    }
 
-        // this.CVU = Utilitarios.generarSiguienteCvu();
+    public Cuenta(String alias, double saldoInicial) {
+        if (alias == null || alias.isEmpty()) throw new RuntimeException("El alias es obligatorio");
+        if (saldoInicial < 0) throw new RuntimeException("El saldo no puede ser negativo");
+
+        this.CVU = Utilitarios.generarSiguienteCvu();
         this.alias = alias;
-        this.saldo = 0.00;
+        this.saldo = saldoInicial;
 
         this.listaOperaciones = new ArrayList<>();
     }

@@ -1,6 +1,4 @@
-package Diagrama;
 
-import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Transferencia extends Operacion{
@@ -23,7 +21,7 @@ public class Transferencia extends Operacion{
         this.remitenteCVU = remitenteCVU;
         this.destinatarioCVU = destinatarioCVU;
         this.destinatarioDNI = destinatarioDNI;
-        // this.fecha = Utilitarios.hoy();
+        this.fecha = Utilitarios.hoy();
     }
 
      // Getters

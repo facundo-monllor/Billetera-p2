@@ -1,4 +1,3 @@
-package Diagrama;
 
 public class CuentaCorporativa extends Cuenta{
     

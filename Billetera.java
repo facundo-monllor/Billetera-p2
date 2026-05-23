@@ -1,4 +1,3 @@
-package Diagrama;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,16 +79,16 @@ public class Billetera {
         CuentaCorporativa cuentaCorporativa = new CuentaCorporativa(alias, cuitEmpresa);
         usuario.getCuentas().add(cuentaCorporativa);
 
-        Empresa empresa = empresas.get(cuitEmpresa);
-        List<String> autorizados = empresa.getUsuariosDNI();
+        // Empresa empresa = empresas.get(cuitEmpresa);
+        // List<String> autorizados = empresa.getUsuariosDNI();
 
-        for(int i=0 ; i < autorizados.size() ;i++){
-            if (autorizados.get(i).equals(dniUsuario)) {
-                throw new RuntimeException("La persona ya está autorizada");
-            }
-        }
+        // for(int i=0 ; i < autorizados.size() ;i++){
+        //     if (autorizados.get(i).equals(dniUsuario)) {
+        //         throw new RuntimeException("La persona ya está autorizada");
+        //     }
+        // }
 
-        autorizados.add(dniUsuario);
+        // autorizados.add(dniUsuario);
     
         return cuentaCorporativa.getCVU();
     }
