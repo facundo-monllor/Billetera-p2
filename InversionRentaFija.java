@@ -8,7 +8,7 @@ public class InversionRentaFija extends Inversion{
         super(plazoDias, monto, true, estado);
 
         // this.tasaInteres = Utilitarios.consultarCotizacion();
-        this.tasaInteres = 100.00;
+        this.tasaInteres = 0.20;
     }
 
      // Getters

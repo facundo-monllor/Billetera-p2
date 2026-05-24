@@ -9,4 +9,4 @@ agreges destinatarioDNI en transferencia
 agregamos cobrada a inversion
 hashmap de empresas y modelo empresa
 metodo validarLimiteRecepcion en cuentaw
-
+vinculadaDivisa se agrega montoDivisa y su getter

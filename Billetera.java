@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
 public class Billetera {
 
     private Map<String, Usuario> usuarios = new HashMap<>();
-    private Map<String, Operacion> operaciones = new HashMap<>();
+    private Map<Integer, Operacion> operaciones = new HashMap<>();
     private Map<String, Empresa> empresas = new HashMap<>();
 
     public void registrarUsuario(String dni, String nombre, String telefono, String email) {
@@ -177,7 +178,7 @@ public class Billetera {
             cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() - monto);
             usuario.sumarInversion(monto);
         }
-
+        operaciones.put(inversionRentaFija.getIdOperacion(), inversionRentaFija);
         return inversionRentaFija.getIdOperacion();
     };
     
@@ -205,7 +206,7 @@ public class Billetera {
             cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() - monto);
             usuario.sumarInversion(monto);
         }
-
+        operaciones.put(inversionVinculadaDivisa.getIdOperacion(), inversionVinculadaDivisa);
         return inversionVinculadaDivisa.getIdOperacion();
     };
 
@@ -245,6 +246,7 @@ public class Billetera {
             cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() - monto);
             usuario.sumarInversion(monto);
         }
+        operaciones.put(inversionFondoLiquidez.getIdOperacion(), inversionFondoLiquidez);
         return inversionFondoLiquidez.getIdOperacion();
     };
 
@@ -482,18 +484,48 @@ public class Billetera {
             throw new RuntimeException("La operacion no esta aprobada");
         }
 
-        if(operacion.getTipo() == "Transferencia"){
+        if(operacion.getTipo().equals("Transferencia")){
             throw new RuntimeException("La operacion es una transferencia");
         }else{
             Inversion inversion = (Inversion) operacion;
-                
                 if(!inversion.getEsPrecancelable()){
                     throw new RuntimeException("La operacion no es precancelable");
-                }else{
-                    inversion.setCobrada(true);
-                    double monto = 0.00;
-                    cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() + monto);
                 }
+                if (inversion.getCobrada()) {
+                    throw new RuntimeException("La inversion ya fue cobrada");
+                }
+                usuario.sumarInversion(-inversion.getMontoInvertido());
+                inversion.setCobrada(true);
+
+                // TODO: COMO CALCULAR LOS DIAS SIN USAR CHRONOUNIT
+                long diasPasados = ChronoUnit.DAYS.between(inversion.getFechaConstitucion(), Utilitarios.hoy());
+                System.out.print("diasPasados " + diasPasados);
+                double montoADevolver = 0.0;
+
+                if (inversion instanceof InversionRentaFija) {
+                InversionRentaFija rentaFija = (InversionRentaFija) inversion;
+        
+                // intereses = monto * (tasa / 365) * días
+                double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * diasPasados;
+                // capital inicial + la mitad de los intereses
+                montoADevolver = rentaFija.getMontoInvertido() + (intereses / 2.0);
+
+                } else if (inversion instanceof InversionVinculadaDivisa) {
+                InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
+        
+                // cantidad de dlares originales que se compraron.
+                double dolaresOriginales = divisa.getMontoDivisa(); 
+        
+                //  intereses se calculan sobre los dolares en vez de los pesos
+                double interesesDolares = dolaresOriginales * (divisa.getTasaInteresDivisa() / 365.0) * diasPasados;
+        
+                // dolares totales a devolver (capital original en dolares + mitad de intereses en dolares)
+                double totalDolares = dolaresOriginales + (interesesDolares / 2.0);
+        
+                // convertimos dolares a pesos con la cotización de hoy
+                montoADevolver = totalDolares * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
+                }
+                cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() + montoADevolver);
         }
     };
 

@@ -4,6 +4,7 @@ public class InversionVinculadaDivisa extends Inversion{
     
     private Double tasaInteresDivisa;
     private String nombreDivisa;
+    private Double montoDivisa;
 
     // Constructor
     public InversionVinculadaDivisa(double monto, int plazoDias, String divisa, Double tasa, Boolean estado) {
@@ -11,8 +12,9 @@ public class InversionVinculadaDivisa extends Inversion{
         if (divisa == null || divisa.isEmpty()) throw new RuntimeException("La divisa es obligatoria");
         if (tasa == null) throw new RuntimeException("La tasa es obligatoria");
 
-        this.tasaInteresDivisa = Utilitarios.consultarCotizacion(divisa);
+        this.tasaInteresDivisa = tasa;
         this.nombreDivisa = divisa;
+        this.montoDivisa = monto / Utilitarios.consultarCotizacion(divisa);
     }
 
      // Getters
@@ -22,11 +24,14 @@ public class InversionVinculadaDivisa extends Inversion{
     public String getNombreDivisa(){
         return nombreDivisa;
     }
+    public Double getMontoDivisa() { 
+        return montoDivisa;
+    }
 
     // to String
     @Override
     public String toString() {
-        return super.toString() + "TasaInteresDivisa: " + tasaInteresDivisa + " NombreDivisa: " + nombreDivisa;
+        return super.toString() + "TasaInteresDivisa: " + tasaInteresDivisa + " NombreDivisa: " + nombreDivisa + " MontoDivisa: " + montoDivisa;
     }
 
 }
