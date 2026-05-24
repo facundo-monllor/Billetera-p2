@@ -5,6 +5,7 @@ public class CuentaCorporativa extends Cuenta{
     
     public CuentaCorporativa(String alias, String cuitEmpresa) {
         super(alias);
+        this.cuitEmpresa = cuitEmpresa;
     }
 
     // Getters

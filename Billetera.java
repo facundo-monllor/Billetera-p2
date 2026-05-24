@@ -216,18 +216,22 @@ public class Billetera {
         }
         
         Cuenta cuentaUsuario = null;
-        String cuitEmpresa = null;
         Usuario usuario = usuarios.get(dni);
             for (Cuenta cuenta : usuario.getCuentas()) {
                 if (cuenta.getCVU().equals(cvu)) {
                     cuentaUsuario = cuenta;
-                    CuentaCorporativa cuentaCorporativa = (CuentaCorporativa) cuentaUsuario;
-                    cuitEmpresa = cuentaCorporativa.getCuitEmpresa();
                 }
             }
         
-        if(cuitEmpresa == null) throw new RuntimeException("La cuenta no es corporativa");
-        if(cuentaUsuario == null) throw new RuntimeException("La cuenta no existe");
+        if (!(cuentaUsuario instanceof CuentaCorporativa)) {
+            throw new IllegalArgumentException("La cuenta no es corporativa");
+        }
+        if(cuentaUsuario == null) {
+            throw new RuntimeException("La cuenta no existe");
+        }
+        CuentaCorporativa cuentaCorporativa = (CuentaCorporativa) cuentaUsuario;
+        String cuitEmpresa = cuentaCorporativa.getCuitEmpresa();
+
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();        
 
         // Empresa empresa = empresas.get(cuitEmpresa);
