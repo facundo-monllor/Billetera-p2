@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.time.temporal.ChronoUnit;
 
-public class Billetera {
+public class Billetera implements IBilletera {
 
     private Map<String, Usuario> usuarios = new HashMap<>();
     private Map<Integer, Operacion> operaciones = new HashMap<>();
@@ -147,6 +147,7 @@ public class Billetera {
         
         cuentaOrigen.getListaOperaciones().add(transferencia);
         cuentaDestino.getListaOperaciones().add(transferencia);
+        operaciones.put(transferencia.getIdOperacion(), transferencia);
 
         if(esAprobada){
             cuentaOrigen.setSaldo(cuentaOrigen.getSaldo() - monto);
