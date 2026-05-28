@@ -469,10 +469,11 @@ public class Billetera implements IBilletera {
                     cuentaUsuario = cuenta;
                 }
             }
-        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
+        if(cuentaUsuario == null) {
+            throw new IllegalArgumentException("La cuenta no existe");
+        }
 
         Operacion operacion = operaciones.get(idInversion);
-
         if(!operacion.getEstado()){
             throw new IllegalStateException("La operacion no esta aprobada");
         }
@@ -490,36 +491,68 @@ public class Billetera implements IBilletera {
                 usuario.sumarInversion(-inversion.getMontoInvertido());
                 inversion.setCobrada(true);
 
-                // TODO: COMO CALCULAR LOS DIAS SIN USAR CHRONOUNIT
                 long diasPasados = ChronoUnit.DAYS.between(inversion.getFechaConstitucion(), Utilitarios.hoy());
-                System.out.print("diasPasados " + diasPasados);
                 double montoADevolver = 0.0;
 
                 if (inversion instanceof InversionRentaFija) {
                 InversionRentaFija rentaFija = (InversionRentaFija) inversion;
-        
-                // intereses = monto * (tasa / 365) * días
                 double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * diasPasados;
-                // capital inicial + la mitad de los intereses
                 montoADevolver = rentaFija.getMontoInvertido() + (intereses / 2.0);
 
                 } else if (inversion instanceof InversionVinculadaDivisa) {
                 InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
-        
-                // cantidad de dlares originales que se compraron.
                 double dolaresOriginales = divisa.getMontoDivisa(); 
-        
-                //  intereses se calculan sobre los dolares en vez de los pesos
                 double interesesDolares = dolaresOriginales * (divisa.getTasaInteresDivisa() / 365.0) * diasPasados;
-        
-                // dolares totales a devolver (capital original en dolares + mitad de intereses en dolares)
                 double totalDolares = dolaresOriginales + (interesesDolares / 2.0);
-        
-                // convertimos dolares a pesos con la cotización de hoy
                 montoADevolver = totalDolares * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
                 }
                 cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() + montoADevolver);
+                usuario.sumarInversion(-inversion.getMontoInvertido());
+                inversion.setCobrada(true);
         }
     };
+
+    public void procesarInversionesQueVencenHoy() {
+        LocalDate hoy = Utilitarios.hoy();
+
+        for (Usuario usuario : usuarios.values()) {
+            for (Cuenta cuenta : usuario.getCuentas()) {
+                for (Operacion operacion : cuenta.getListaOperaciones()) {
+                    if (operacion instanceof Inversion) {
+                        Inversion inversion = (Inversion) operacion;
+                        if (inversion.getEstado() && !inversion.getCobrada()) {
+                            
+                            LocalDate fechaVencimiento = inversion.getFechaConstitucion().plusDays(inversion.getPlazo());
+                            if (fechaVencimiento.isEqual(hoy) || fechaVencimiento.isBefore(hoy)) {
+                                double montoTotal = 0.0;
+                                int dias = inversion.getPlazo();
+
+                                if (inversion instanceof InversionRentaFija) {
+                                    InversionRentaFija rentaFija = (InversionRentaFija) inversion;
+                                    double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * dias;
+                                    montoTotal = rentaFija.getMontoInvertido() + intereses;
+
+                                } else if (inversion instanceof InversionVinculadaDivisa) {
+                                    InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
+                                    double interesDivisa = divisa.getMontoDivisa() * (divisa.getTasaInteresDivisa() / 365.0) * dias;
+                                    double totalDivisa = divisa.getMontoDivisa() + interesDivisa;
+                                    montoTotal = totalDivisa * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
+
+                                } else if (inversion instanceof InversionFondoLiquidez) {
+                                    InversionFondoLiquidez fondoLiquidez = (InversionFondoLiquidez) inversion;
+                                    double intereses = fondoLiquidez.getMontoInvertido() * (fondoLiquidez.getTasaInteres() / 365.0) * dias;
+                                    montoTotal = fondoLiquidez.getMontoInvertido() + intereses;
+
+                                }
+                                cuenta.setSaldo(cuenta.getSaldo() + montoTotal);
+                                inversion.setCobrada(true);
+                                usuario.sumarInversion(-inversion.getMontoInvertido());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
