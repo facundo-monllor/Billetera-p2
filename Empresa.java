@@ -14,11 +14,11 @@ public class Empresa {
 
     // Constructor
     public Empresa(String cuit, String nombreFantasia, String telefono, String email, String nombreContacto) {
-        if (cuit == null || cuit.isEmpty()) throw new RuntimeException("El CUIT es obligatorio");
-        if (nombreFantasia == null || nombreFantasia.isEmpty()) throw new RuntimeException("El nombre de fantasia es obligatorio");
-        if (telefono == null || telefono.isEmpty()) throw new RuntimeException("El telefono es obligatorio");
-        if (email == null || email.isEmpty()) throw new RuntimeException("El email es obligatorio");
-        if (nombreContacto == null || nombreContacto.isEmpty()) throw new RuntimeException("El nombre de contacto es obligatorio");
+        if (cuit == null || cuit.isEmpty()) throw new IllegalArgumentException("El CUIT es obligatorio");
+        if (nombreFantasia == null || nombreFantasia.isEmpty()) throw new IllegalArgumentException("El nombre de fantasia es obligatorio");
+        if (telefono == null || telefono.isEmpty()) throw new IllegalArgumentException("El telefono es obligatorio");
+        if (email == null || email.isEmpty()) throw new IllegalArgumentException("El email es obligatorio");
+        if (nombreContacto == null || nombreContacto.isEmpty()) throw new IllegalArgumentException("El nombre de contacto es obligatorio");
 
         this.cuit = cuit;
         this.nombreFantasia = nombreFantasia;
@@ -32,25 +32,8 @@ public class Empresa {
     public String getCuit(){
         return cuit;
     }
-    public String getNombreFantasia(){
-        return nombreFantasia;
-    }
-    public String getTelefono(){
-        return telefono;
-    }
-    public String getEmail(){
-        return email;
-    }
-    public String getNombreContacto(){
-        return nombreContacto;
-    }
     public List<String> getUsuariosDNI(){
         return usuariosDNI;
-    }
-
-    // Setters
-    public void setEmail(String newEmail){
-         email = newEmail;
     }
 
     // to String

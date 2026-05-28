@@ -13,7 +13,7 @@ public class Billetera implements IBilletera {
 
     public void registrarUsuario(String dni, String nombre, String telefono, String email) {
         if (usuarios.containsKey(dni)) {
-            throw new RuntimeException("El usuario ya existe");
+            throw new IllegalArgumentException("El usuario ya existe con ese dni");
         }
 
         Usuario usuario = new Usuario(dni, nombre, email, telefono);
@@ -22,13 +22,13 @@ public class Billetera implements IBilletera {
 
     public String crearCuentaRegular(String dniUsuario, String alias){
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
 
         usuarios.forEach((dni, usuario) -> {
             for (Cuenta cuenta : usuario.getCuentas()) {
                 if (cuenta.getAlias().equals(alias)) {
-                    throw new RuntimeException("El alias ya está en uso");
+                    throw new IllegalArgumentException("El alias ya está en uso");
                 }
             }
         });
@@ -42,13 +42,13 @@ public class Billetera implements IBilletera {
 
     public String crearCuentaPremium(String dniUsuario, String alias, double depositoInicial){
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
 
         usuarios.forEach((dni, usuario) -> {
             for (Cuenta cuenta : usuario.getCuentas()) {
                 if (cuenta.getAlias().equals(alias)) {
-                    throw new RuntimeException("El alias ya está en uso");
+                    throw new IllegalArgumentException("El alias ya está en uso");
                 }
             }
         });
@@ -62,16 +62,16 @@ public class Billetera implements IBilletera {
 
     public String crearCuentaCorporativa(String dniUsuario, String alias, String cuitEmpresa){
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
         if (!empresas.containsKey(cuitEmpresa)) {
-            throw new RuntimeException("La empresa no existe");
+            throw new IllegalArgumentException("La empresa no existe");
         }
 
         usuarios.forEach((dni, usuario) -> {
             for (Cuenta cuenta : usuario.getCuentas()) {
                 if (cuenta.getAlias().equals(alias)) {
-                    throw new RuntimeException("El alias ya está en uso");
+                    throw new IllegalArgumentException("El alias ya está en uso");
                 }
             }
         });
@@ -96,7 +96,7 @@ public class Billetera implements IBilletera {
 
     public List<String> obtenerCuentas(String dniUsuario) {
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
 
         Usuario usuario = usuarios.get(dniUsuario);
@@ -118,7 +118,7 @@ public class Billetera implements IBilletera {
                 }
             }
         }
-        throw new RuntimeException("La cuenta no existe");
+        throw new IllegalArgumentException("La cuenta no existe");
     }
 
     public void realizarTransferencia(String cvuOrigen, String cvuDestino, double monto){
@@ -138,8 +138,8 @@ public class Billetera implements IBilletera {
             }
         }
         
-        if(cuentaOrigen == null) throw new RuntimeException("La cuenta origen no existe");
-        if(cuentaDestino == null) throw new RuntimeException("La cuenta destino no existe");
+        if(cuentaOrigen == null) throw new IllegalArgumentException("La cuenta origen no existe");
+        if(cuentaDestino == null) throw new IllegalArgumentException("La cuenta destino no existe");
         cuentaDestino.validarLimiteRecepcion(monto);
         Boolean esAprobada = monto <= cuentaOrigen.getSaldo();
 
@@ -157,7 +157,7 @@ public class Billetera implements IBilletera {
 
     public int realizarInversionRentaFija(String dni, String cvu, double monto, int plazoDias){
         if (!usuarios.containsKey(dni)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
         
         Cuenta cuentaUsuario = null;
@@ -169,7 +169,7 @@ public class Billetera implements IBilletera {
             }
         
         
-        if(cuentaUsuario == null) throw new RuntimeException("La cuenta no existe");
+        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();
 
         InversionRentaFija inversionRentaFija = new InversionRentaFija(monto, plazoDias, esAprobada);
@@ -185,7 +185,7 @@ public class Billetera implements IBilletera {
     
     public int realizarInversionDivisa(String dni, String cvu, double monto, int plazoDias, String divisa, double tasa){
         if (!usuarios.containsKey(dni)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
         
         Cuenta cuentaUsuario = null;
@@ -197,7 +197,7 @@ public class Billetera implements IBilletera {
             }
         
         
-        if(cuentaUsuario == null) throw new RuntimeException("La cuenta no existe");
+        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();
 
         InversionVinculadaDivisa inversionVinculadaDivisa = new InversionVinculadaDivisa(monto, plazoDias, divisa, tasa, esAprobada);
@@ -213,7 +213,7 @@ public class Billetera implements IBilletera {
 
     public int realizarInversionLiquidez(String dni, String cvu, double monto, int plazoDias){
         if (!usuarios.containsKey(dni)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
         
         Cuenta cuentaUsuario = null;
@@ -228,7 +228,7 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("La cuenta no es corporativa");
         }
         if(cuentaUsuario == null) {
-            throw new RuntimeException("La cuenta no existe");
+            throw new IllegalArgumentException("La cuenta no existe");
         }
         CuentaCorporativa cuentaCorporativa = (CuentaCorporativa) cuentaUsuario;
         String cuitEmpresa = cuentaCorporativa.getCuitEmpresa();
@@ -308,7 +308,7 @@ public class Billetera implements IBilletera {
         }
 
         if (cuentaEncontrada == null) {
-            throw new RuntimeException("La cuenta no existe");
+            throw new IllegalArgumentException("La cuenta no existe");
         }
 
         for (Operacion operacion : cuentaEncontrada.getListaOperaciones()) {
@@ -342,7 +342,7 @@ public class Billetera implements IBilletera {
 
     public List<String> consultarHistorialUsuario(String dniUsuario) {
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
 
         Usuario usuario = usuarios.get(dniUsuario);
@@ -381,7 +381,7 @@ public class Billetera implements IBilletera {
 
     public double obtenerTotalInvertido(String dniUsuario){
         if (!usuarios.containsKey(dniUsuario)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
         Usuario usuario = usuarios.get(dniUsuario);
 
@@ -390,7 +390,7 @@ public class Billetera implements IBilletera {
 
     public List<String> cuentasConMayorVolumen(int cantidadTop) {
         if (cantidadTop <= 0) {
-            throw new RuntimeException("El numero debe ser positivo");
+            throw new IllegalArgumentException("El numero debe ser positivo");
         }
 
         List<Cuenta> cuentas = new ArrayList<>();
@@ -405,7 +405,7 @@ public class Billetera implements IBilletera {
         );
         
         if(cantidadTop > cuentas.size()) {
-            throw new RuntimeException("El número del top es más grande que las cuentas disponibles");
+            throw new IllegalArgumentException("El número del top es más grande que las cuentas disponibles");
         }
 
         List<String> listaFormateada = new ArrayList<>();
@@ -430,7 +430,7 @@ public class Billetera implements IBilletera {
 
     public void registrarEmpresa(String cuit, String nombreFantasia, String telefono, String email, String nombreContacto){
         if (empresas.containsKey(cuit)) {
-            throw new RuntimeException("La empresa ya existe");
+            throw new IllegalArgumentException("La empresa ya existe");
         }
 
         Empresa empresa = new Empresa(cuit, nombreFantasia, telefono, email, nombreContacto);
@@ -439,7 +439,7 @@ public class Billetera implements IBilletera {
 
     public void agregarPersonaAutorizada(String cuitEmpresa, String dniAutorizado){
          if (!empresas.containsKey(cuitEmpresa)) {
-            throw new RuntimeException("La empresa no existe");
+            throw new IllegalArgumentException("La empresa no existe");
         }
 
         Empresa empresa = empresas.get(cuitEmpresa);
@@ -447,7 +447,7 @@ public class Billetera implements IBilletera {
 
         for(int i=0 ; i < autorizados.size() ;i++){
             if (autorizados.get(i).equals(dniAutorizado)) {
-                throw new RuntimeException("La persona ya está autorizada");
+                throw new IllegalStateException("La persona ya está autorizada");
             }
         }
 
@@ -456,10 +456,10 @@ public class Billetera implements IBilletera {
 
     public void precancelarInversion(String dni, String cvu, int idInversion){
         if (!operaciones.containsKey(idInversion)) {
-            throw new RuntimeException("La operacion no existe");
+            throw new IllegalArgumentException("La operacion no existe");
         }
         if (!usuarios.containsKey(dni)) {
-            throw new RuntimeException("El usuario no existe");
+            throw new IllegalArgumentException("El usuario no existe");
         }
 
         Usuario usuario = usuarios.get(dni);
@@ -469,23 +469,23 @@ public class Billetera implements IBilletera {
                     cuentaUsuario = cuenta;
                 }
             }
-        if(cuentaUsuario == null) throw new RuntimeException("La cuenta no existe");
+        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
 
         Operacion operacion = operaciones.get(idInversion);
 
         if(!operacion.getEstado()){
-            throw new RuntimeException("La operacion no esta aprobada");
+            throw new IllegalStateException("La operacion no esta aprobada");
         }
 
         if(operacion.getTipo().equals("Transferencia")){
-            throw new RuntimeException("La operacion es una transferencia");
+            throw new IllegalArgumentException("La operacion es una transferencia");
         }else{
             Inversion inversion = (Inversion) operacion;
                 if(!inversion.getEsPrecancelable()){
-                    throw new RuntimeException("La operacion no es precancelable");
+                    throw new IllegalStateException("La operacion no es precancelable");
                 }
                 if (inversion.getCobrada()) {
-                    throw new RuntimeException("La inversion ya fue cobrada");
+                    throw new IllegalStateException("La inversion ya fue cobrada");
                 }
                 usuario.sumarInversion(-inversion.getMontoInvertido());
                 inversion.setCobrada(true);

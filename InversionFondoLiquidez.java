@@ -7,13 +7,8 @@ public class InversionFondoLiquidez extends Inversion{
     // Constructor
     public InversionFondoLiquidez(double monto, int plazoDias, Boolean estado) {
         super(plazoDias, monto, false, estado);
-        if (monto < montoMinimo) throw new RuntimeException("El monto mínimo es de 20 millones de pesos");
+        if (monto < montoMinimo) throw new IllegalArgumentException("El monto mínimo es de 20 millones de pesos");
         this.tasaInteres = 8.00;
-    }
-
-     // Getters
-    public Double getMontoMinimo(){
-        return montoMinimo;
     }
 
     // to String

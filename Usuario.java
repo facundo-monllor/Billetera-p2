@@ -17,10 +17,10 @@ public class Usuario {
 
     // Constructor
     public Usuario(String DNI, String nombre, String email, String telefono) {
-        if (DNI == null || DNI.isEmpty()) throw new RuntimeException("El DNI es obligatorio");
-        if (nombre == null || nombre.isEmpty()) throw new RuntimeException("El nombre es obligatorio");
-        if (email == null || email.isEmpty()) throw new RuntimeException("El email es obligatorio");
-        if (telefono == null || telefono.isEmpty()) throw new RuntimeException("El teléfono es obligatorio");
+        if (DNI == null || DNI.isEmpty()) throw new IllegalArgumentException("El DNI es obligatorio");
+        if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("El nombre es obligatorio");
+        if (email == null || email.isEmpty()) throw new IllegalArgumentException("El email es obligatorio");
+        if (telefono == null || telefono.isEmpty()) throw new IllegalArgumentException("El teléfono es obligatorio");
 
         this.DNI = DNI;
         this.nombre = nombre;

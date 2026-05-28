@@ -15,8 +15,8 @@ public abstract class Cuenta {
     }
 
     public Cuenta(String alias, double saldoInicial) {
-        if (alias == null || alias.isEmpty()) throw new RuntimeException("El alias es obligatorio");
-        if (saldoInicial < 0) throw new RuntimeException("El saldo no puede ser negativo");
+        if (alias == null || alias.isEmpty()) throw new IllegalArgumentException("El alias es obligatorio");
+        if (saldoInicial < 0) throw new IllegalArgumentException("El saldo no puede ser negativo");
 
         this.CVU = Utilitarios.generarSiguienteCvu();
         this.alias = alias;
@@ -40,9 +40,6 @@ public abstract class Cuenta {
     }
 
     // Setters
-    public void setAlias(String newAlias){
-        alias = newAlias;
-    }
      public void setSaldo(Double newSaldo){
         saldo = newSaldo;
     }
@@ -57,16 +54,7 @@ public abstract class Cuenta {
     public abstract void operar();
 
     public void validarLimiteRecepcion(Double montoAAcreditar) {
-    // Por defecto no hace nada. Las cuentas sin límite usarán este comportamiento.
-}
-
-    // public List<Double> obtenerComisiones() {
-    // }
-
-    // public Void invertirDinero(Inversion inversion) {
-    // }
-
-    // public List<Operacion> getListaOperaciones() {
-    // }
+        // Por defecto no hace nada. Las cuentas sin límite usarán este comportamiento.
+    }
       
 }

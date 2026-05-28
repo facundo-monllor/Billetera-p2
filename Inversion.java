@@ -12,8 +12,8 @@ public abstract class Inversion extends Operacion{
     // Constructor
     public Inversion(Integer plazo, Double monto, Boolean esPrecancelable, Boolean estado) {
         super("Inversion", estado);
-        if (plazo == null) throw new RuntimeException("El plazo es obligatorio");
-        if (monto == null) throw new RuntimeException("El monto es obligatorio");
+        if (plazo == null) throw new IllegalArgumentException("El plazo es obligatorio");
+        if (monto == null) throw new IllegalArgumentException("El monto es obligatorio");
 
         this.fechaConstitucion = Utilitarios.hoy();
         this.plazo = plazo;
@@ -41,10 +41,6 @@ public abstract class Inversion extends Operacion{
     }
 
     // Setters
-    public void setEsPrecancelable(Boolean newEsPrecancelable){
-        esPrecancelable = newEsPrecancelable;
-    }
-
     public void setCobrada(Boolean newCobrada){
         cobrada = newCobrada;
     }

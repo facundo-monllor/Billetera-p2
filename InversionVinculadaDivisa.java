@@ -9,8 +9,8 @@ public class InversionVinculadaDivisa extends Inversion{
     // Constructor
     public InversionVinculadaDivisa(double monto, int plazoDias, String divisa, Double tasa, Boolean estado) {
         super(plazoDias, monto, true, estado);
-        if (divisa == null || divisa.isEmpty()) throw new RuntimeException("La divisa es obligatoria");
-        if (tasa == null) throw new RuntimeException("La tasa es obligatoria");
+        if (divisa == null || divisa.isEmpty()) throw new IllegalArgumentException("La divisa es obligatoria");
+        if (tasa == null) throw new IllegalArgumentException("La tasa es obligatoria");
 
         this.tasaInteresDivisa = tasa;
         this.nombreDivisa = divisa;
