@@ -1,9 +1,9 @@
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.temporal.ChronoUnit;
 
 public class Billetera implements IBilletera {
 
@@ -437,7 +437,7 @@ public class Billetera implements IBilletera {
         empresas.put(cuit, empresa);
     }
 
-    void agregarPersonaAutorizada(String cuitEmpresa, String dniAutorizado){
+    public void agregarPersonaAutorizada(String cuitEmpresa, String dniAutorizado){
          if (!empresas.containsKey(cuitEmpresa)) {
             throw new RuntimeException("La empresa no existe");
         }
