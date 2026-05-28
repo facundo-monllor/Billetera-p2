@@ -11,6 +11,11 @@ public class InversionFondoLiquidez extends Inversion{
         this.tasaInteres = 8.00;
     }
 
+
+    public Double getTasaInteres() {
+        return tasaInteres;
+    }
+    
     // to String
     @Override
     public String toString() {
