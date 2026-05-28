@@ -36,15 +36,6 @@ public class Usuario {
     public String getDNI(){
         return DNI;
     }
-    public String getNombre(){
-        return nombre;
-    }
-    public String getEmail(){
-        return email;
-    }
-    public String getTelefono(){
-        return telefono;
-    }
     public Double getTotalInvertido(){
         return totalInvertido;
     }
@@ -59,10 +50,6 @@ public class Usuario {
     }
     
     // Setters
-    public void setEmail(String newEmail){
-        email = newEmail;
-    }
-    
     public void sumarInversion(Double monto) {
         if (this.totalInvertido == null) {
             this.totalInvertido = 0.0;
