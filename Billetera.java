@@ -454,18 +454,6 @@ public class Billetera implements IBilletera {
         autorizados.add(dniAutorizado);
     };
 
-
-
-    /**
-     * [Nuevo]
-     * 13) Precancela una inversión activa de forma anticipada.
-     * Lanza error si algun dato es inválido, la inversión no existe o no está
-     * activa.
-     *
-     * @param dni         El DNI del usuario.
-     * @param cvu         El CVU de la cuenta asociada a la inversión.
-     * @param idInversion El identificador único de la inversión a cancelar.
-     */
     public void precancelarInversion(String dni, String cvu, int idInversion){
         if (!operaciones.containsKey(idInversion)) {
             throw new RuntimeException("La operacion no existe");
