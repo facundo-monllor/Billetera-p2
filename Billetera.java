@@ -421,7 +421,7 @@ public class Billetera implements IBilletera {
     public String consultarCvu(String alias){
          for (Usuario usuario : usuarios.values()) {
             for (Cuenta cuenta : usuario.getCuentas()) {
-                if(cuenta.getAlias() == alias){
+                if(cuenta.getAlias().equals(alias)){
                     return cuenta.getCVU();
                 }
             }

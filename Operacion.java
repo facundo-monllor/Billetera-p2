@@ -11,6 +11,8 @@ public abstract class Operacion {
     public Operacion(String tipo, Boolean estado) {
         Random random = new Random();
         this.idOperacion = random.nextInt(1000000);
+        if (tipo == null || tipo.isEmpty()) throw new IllegalArgumentException("El tipo es obligatorio");
+        if (estado == null ) throw new IllegalArgumentException("El estado es obligatorio");
         this.tipo = tipo;
         this.estado = estado;
     }
@@ -28,10 +30,6 @@ public abstract class Operacion {
         return estado;
     }
 
-    // to String
-    @Override
-    public String toString() {
-        return "IdOperacion: " + idOperacion + "Tipo: " + tipo;
-    }
+    public abstract String toString(String dniOrigen, String cvuOrigen);
     
 }
