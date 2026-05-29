@@ -507,8 +507,6 @@ public class Billetera implements IBilletera {
                 montoADevolver = totalDolares * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
                 }
                 cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() + montoADevolver);
-                usuario.sumarInversion(-inversion.getMontoInvertido());
-                inversion.setCobrada(true);
         }
     };
 
