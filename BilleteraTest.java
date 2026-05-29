@@ -1,16 +1,14 @@
-// package ar.edu.ungs.billetera;
+package ar.edu.ungs.billetera;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import Diagrama.Billetera;
 
 import java.time.LocalDate;
 import java.util.List;
 import static org.junit.Assert.*;
 
 public class BilleteraTest {
-    private Billetera billetera;
+    private IBilletera billetera;
 
     @Before
     public void setUp() {

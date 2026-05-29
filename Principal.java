@@ -1,8 +1,7 @@
-// package ar.edu.ungs.billetera;
+package ar.edu.ungs.billetera;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 public class Principal {
 
@@ -18,8 +17,7 @@ public class Principal {
         Utilitarios.actualizarCotizacion("FLE", 1.02);
         System.out.println("Cotizaciones iniciales - USD: 1020.50 | EUR: 1100.25 | FLE: 1.02\n");
 
-        // IBilletera billetera = new Billetera();
-        Billetera billetera = new Billetera();
+        IBilletera billetera = new Billetera();
 
         System.out.println("[0] Estado inicial de la billetera: ");
         System.out.println(billetera);
