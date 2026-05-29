@@ -43,8 +43,13 @@ public class Transferencia extends Operacion{
 
     // to String
     @Override
-    public String toString() {
-        return super.toString() + "Monto: " + monto + " RemitenteCVU: " + remitenteCVU + " DestinatarioCVU: " + destinatarioCVU + " DestinatarioDNI: " + destinatarioDNI;
+    public String toString(String dniOrigen, String cvuOrigen) {
+        String estadoOperacion = getEstado() ? "Aprobado" : "Rechazado";
+        return "fecha: " + getFecha() + "\n" +
+               "origen: " + dniOrigen + " (" + getRemitenteCVU() + ")\n" +
+               "destino: " + getDestinatarioDNI() + " (" + getDestinatarioCVU() + ")\n" +
+               "monto: " + getMonto() + "\n" +
+               estadoOperacion;
     }
 
 }

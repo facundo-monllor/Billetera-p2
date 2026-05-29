@@ -48,8 +48,14 @@ public abstract class Inversion extends Operacion{
 
     // to String
     @Override
-    public String toString() {
-        return super.toString() + "FechaConstitucion: " + fechaConstitucion + " Plazo: " + plazo + " MontoInvertido: " + montoInvertido + " EsPrecancelable: " + esPrecancelable;
+    public String toString(String dniOrigen, String cvuOrigen) {
+        String estadoOperacion = getEstado() ? "Aprobado" : "Rechazado";
+        return "fecha: " + getFechaConstitucion() + "\n" +
+               "origen: " + dniOrigen + " (" + cvuOrigen + ")\n" +
+               "desc: " + this.getClass().getSimpleName() + "\n" +
+               "monto: " + getMontoInvertido() + "\n" +
+               "plazo: " + getPlazo() + "\n" +
+               estadoOperacion;
     }
 
 }
