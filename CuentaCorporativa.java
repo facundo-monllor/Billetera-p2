@@ -4,7 +4,6 @@ public class CuentaCorporativa extends Cuenta{
     private String cuitEmpresa;
     
     // Constructor 
-
     public CuentaCorporativa(String alias, String cuitEmpresa) {
         super(alias);
         if (cuitEmpresa == null || cuitEmpresa.isEmpty()) throw new IllegalArgumentException("El cuit de empresa es obligatorio");
