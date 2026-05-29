@@ -54,7 +54,7 @@ public abstract class Cuenta {
     public abstract void operar();
 
     public void validarLimiteRecepcion(Double montoAAcreditar) {
-        // Por defecto no hace nada. Las cuentas sin límite usarán este comportamiento.
+        // Override para el tipo de cuenta
     }
       
 }
