@@ -40,8 +40,8 @@ public abstract class Cuenta {
     }
 
     // Setters
-     public void setSaldo(Double newSaldo){
-        saldo = newSaldo;
+     public void setSaldo(Double nuevoSaldo){
+        saldo = nuevoSaldo;
     }
 
     // to String
