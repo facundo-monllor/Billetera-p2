@@ -116,11 +116,13 @@ public class Billetera implements IBilletera {
         if (monto <= 0) throw new IllegalArgumentException("El monto a transferir debe ser mayor a cero");
         Cuenta cuentaOrigen = null;
         Cuenta cuentaDestino = null;
+        Usuario usuarioOrigen = null;
         Usuario usuarioDestino = null;
         for (Usuario usuario : usuarios.values()) {
             for (Cuenta cuenta : usuario.getCuentas()) {
                 if (cuenta.getCVU().equals(cvuOrigen)) {
                     cuentaOrigen = cuenta;
+                    usuarioOrigen = usuario;
                 }
                 if (cuenta.getCVU().equals(cvuDestino)) {
                     cuentaDestino = cuenta;
@@ -128,13 +130,14 @@ public class Billetera implements IBilletera {
                 }
             }
         }
-        
         if(cuentaOrigen == null) throw new IllegalArgumentException("La cuenta origen no existe");
         if(cuentaDestino == null) throw new IllegalArgumentException("La cuenta destino no existe");
+        if(usuarioOrigen == null) throw new IllegalArgumentException("El usuario origen no existe");
+        if(usuarioDestino == null) throw new IllegalArgumentException("El usuario destino no existe");
         cuentaDestino.validarLimiteRecepcion(monto);
         Boolean esAprobada = monto <= cuentaOrigen.getSaldo();
 
-        Transferencia transferencia = new Transferencia(monto, cvuOrigen, cvuDestino,usuarioDestino.getDNI(), esAprobada);
+        Transferencia transferencia = new Transferencia(monto, cvuOrigen, cvuDestino,usuarioOrigen.getDNI(),usuarioDestino.getDNI(), esAprobada);
         
         cuentaOrigen.getListaOperaciones().add(transferencia);
         cuentaDestino.getListaOperaciones().add(transferencia);
@@ -468,6 +471,32 @@ public class Billetera implements IBilletera {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== BILLETERA ===\n");
+
+        sb.append("\nUSUARIOS (").append(usuarios.size()).append("):\n");
+        for (Usuario usuario : usuarios.values()) {
+            sb.append("  ").append(usuario).append("\n");
+            for (Cuenta cuenta : usuario.getCuentas()) {
+                sb.append("    [").append(cuenta.getClass().getSimpleName()).append("] ");
+                sb.append(cuenta.getAlias()).append(" (").append(cuenta.getCVU()).append(")");
+                sb.append(" - Saldo: $").append(cuenta.getSaldo()).append("\n");
+            }
+        }
+
+        sb.append("\nEMPRESAS (").append(empresas.size()).append("):\n");
+        for (Empresa empresa : empresas.values()) {
+            sb.append("  ").append(empresa).append("\n");
+        }
+
+        sb.append("\nOPERACIONES TOTALES: ").append(operaciones.size()).append("\n");
+        sb.append("=================\n");
+
+        return sb.toString();
     }
 
 }
