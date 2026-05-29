@@ -49,9 +49,6 @@ public abstract class Cuenta {
     public String toString() {
         return "CVU: " + CVU + " alias: " + alias + " saldo: " + saldo + "listaOperaciones:" + listaOperaciones;
     }
-    
-    // Metodos
-    public abstract void operar();
 
     public void validarLimiteRecepcion(Double montoAAcreditar) {
         // Override para el tipo de cuenta
