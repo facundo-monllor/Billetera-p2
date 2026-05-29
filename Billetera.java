@@ -81,16 +81,6 @@ public class Billetera implements IBilletera {
         CuentaCorporativa cuentaCorporativa = new CuentaCorporativa(alias, cuitEmpresa);
         usuario.getCuentas().add(cuentaCorporativa);
 
-        // Empresa empresa = empresas.get(cuitEmpresa);
-        // List<String> autorizados = empresa.getUsuariosDNI();
-
-        // for(int i=0 ; i < autorizados.size() ;i++){
-        //     if (autorizados.get(i).equals(dniUsuario)) {
-        //         throw new RuntimeException("La persona ya está autorizada");
-        //     }
-        // }
-
-        // autorizados.add(dniUsuario);
     
         return cuentaCorporativa.getCVU();
     }
@@ -236,14 +226,7 @@ public class Billetera implements IBilletera {
 
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();        
 
-        // Empresa empresa = empresas.get(cuitEmpresa);
-        // List<String> autorizados = empresa.getUsuariosDNI();
 
-        // for(int i=0 ; i < autorizados.size() ;i++){
-        //     if (!autorizados.get(i).equals(dni)) {
-        //         throw new RuntimeException("La persona no está autorizada");
-        //     }
-        // }
         
         InversionFondoLiquidez inversionFondoLiquidez = new InversionFondoLiquidez(monto, plazoDias, esAprobada);
         cuentaUsuario.getListaOperaciones().add(inversionFondoLiquidez);
@@ -262,30 +245,7 @@ public class Billetera implements IBilletera {
         for (Usuario usuario : usuarios.values()) {
             for (Cuenta cuenta : usuario.getCuentas()) {
                 for (Operacion operacion : cuenta.getListaOperaciones()) {
-
-                    String estado = operacion.getEstado() ? "Aprobado" : "Rechazado";
-                    String detalle = "";
-
-                    if (operacion instanceof Transferencia) {
-                        Transferencia transferencia = (Transferencia) operacion;
-                        detalle =
-                                "fecha: " + transferencia.getFecha() + "\n" +
-                                "origen: " + usuario.getDNI() + " (" + transferencia.getRemitenteCVU() + ")\n" +
-                                "destino: " + transferencia.getDestinatarioDNI() + " " + transferencia.getDestinatarioCVU() + "\n" +
-                                "monto: " + transferencia.getMonto() + "\n" +
-                                estado;
-                    } else if (operacion instanceof Inversion) {
-                        Inversion inversion = (Inversion) operacion;
-                        detalle =
-                                "fecha: " + inversion.getFechaConstitucion() + "\n" +
-                                "origen: " + usuario.getDNI() + " (" + cuenta.getCVU() + ")\n" +
-                                "desc: " + inversion.getClass().getSimpleName() + "\n" +
-                                "monto: " + inversion.getMontoInvertido() + "\n" +
-                                "plazo: " + inversion.getPlazo() + "\n" +
-                                estado;
-                    }
-                    
-                    historial.add(detalle);
+                    historial.add(operacion.toString(usuario.getDNI(),cuenta.getCVU()));
                 }
             }
         }
@@ -308,34 +268,12 @@ public class Billetera implements IBilletera {
             }
         }
 
-        if (cuentaEncontrada == null) {
+        if (cuentaEncontrada == null || usuarioCuenta == null) {
             throw new IllegalArgumentException("La cuenta no existe");
         }
 
         for (Operacion operacion : cuentaEncontrada.getListaOperaciones()) {
-            String estado = operacion.getEstado() ? "Aprobado" : "Rechazado";
-            String detalle = "";
-
-            if (operacion instanceof Transferencia) {
-                Transferencia transferencia = (Transferencia) operacion;
-                detalle =
-                        "fecha: " + transferencia.getFecha() + "\n" +
-                        "origen: " + usuarioCuenta.getDNI() +" (" + transferencia.getRemitenteCVU() + ")\n" +
-                        "destino: " + transferencia.getDestinatarioDNI() +" (" + transferencia.getDestinatarioCVU() + ")\n" +
-                        "monto: " + transferencia.getMonto() + "\n" +
-                        estado;
-            } else if (operacion instanceof Inversion) {
-                Inversion inversion = (Inversion) operacion;
-                detalle =
-                        "fecha: " + inversion.getFechaConstitucion() + "\n" +
-                        "origen: " + usuarioCuenta.getDNI() +" (" + cuentaEncontrada.getCVU() + ")\n" +
-                        "desc: " + inversion.getClass().getSimpleName() + "\n" +
-                        "monto: " + inversion.getMontoInvertido() + "\n" +
-                        "plazo: " + inversion.getPlazo() + "\n" +
-                        estado;
-            }
-
-            historial.add(detalle);
+                historial.add(operacion.toString(usuarioCuenta.getDNI(),cuentaEncontrada.getCVU()));
         }
 
         return historial;
@@ -351,29 +289,7 @@ public class Billetera implements IBilletera {
 
         for (Cuenta cuenta : usuario.getCuentas()) {
             for (Operacion operacion : cuenta.getListaOperaciones()) {
-                String estado = operacion.getEstado() ? "Aprobado" : "Rechazado";
-                String detalle = "";
-
-                if (operacion instanceof Transferencia) {
-                    Transferencia transferencia = (Transferencia) operacion;
-                    detalle =
-                            "fecha: " + transferencia.getFecha() + "\n" +
-                            "origen: " + usuario.getDNI() + " (" + transferencia.getRemitenteCVU() + ")\n" +
-                            "destino: " + transferencia.getDestinatarioDNI() + " (" + transferencia.getDestinatarioCVU() + ")\n" +
-                            "monto: " + transferencia.getMonto() + "\n" +
-                            estado;
-                }else if (operacion instanceof Inversion) {
-                    Inversion inversion = (Inversion) operacion;
-                    detalle =
-                            "fecha: " + inversion.getFechaConstitucion() + "\n" +
-                            "origen: " + usuario.getDNI() + " (" + cuenta.getCVU() + ")\n" +
-                            "desc: " + inversion.getClass().getSimpleName() + "\n" +
-                            "monto: " + inversion.getMontoInvertido() + "\n" +
-                            "plazo: " + inversion.getPlazo() + "\n" +
-                            estado;
-                }
-
-                historial.add(detalle);
+                historial.add(operacion.toString(usuario.getDNI(), cuenta.getCVU()));
             }
         }
 
