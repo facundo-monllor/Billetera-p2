@@ -15,9 +15,4 @@ public class CuentaPremium extends Cuenta{
         return super.toString() + " MontoMinimo: " + montoMinimo;
     }
 
-    // Metodos
-    @Override
-    public void operar() {
-        // lógica específica de CuentaRegular
-    }
 }

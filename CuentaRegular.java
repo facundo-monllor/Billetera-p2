@@ -15,11 +15,6 @@ public class CuentaRegular extends Cuenta{
         return super.toString() + " SaldoMaximo: " + saldoMaximo;
     }
 
-    // Metodos
-    @Override
-    public void operar() {
-        // lógica específica de CuentaRegular
-    }
 
     @Override
     public void validarLimiteRecepcion(Double monto) {
