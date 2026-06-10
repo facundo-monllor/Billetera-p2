@@ -17,7 +17,14 @@ public class InversionVinculadaDivisa extends Inversion{
         this.montoDivisa = monto / Utilitarios.consultarCotizacion(divisa);
     }
 
-     // Getters
+    @Override
+    public double calcularMontoVencimiento(int dias) {
+        double interesDivisa = montoDivisa * (tasaInteresDivisa / 365.0) * dias;
+        double totalDivisa = montoDivisa + interesDivisa;
+        return totalDivisa * Utilitarios.consultarCotizacion(nombreDivisa);
+    }
+
+    // Getters
     public Double getTasaInteresDivisa(){
         return tasaInteresDivisa;
     }

@@ -12,6 +12,12 @@ public class InversionFondoLiquidez extends Inversion{
     }
 
 
+    @Override
+    public double calcularMontoVencimiento(int dias) {
+        double intereses = getMontoInvertido() * (tasaInteres / 365.0) * dias;
+        return getMontoInvertido() + intereses;
+    }
+
     public Double getTasaInteres() {
         return tasaInteres;
     }

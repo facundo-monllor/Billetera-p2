@@ -11,7 +11,13 @@ public class InversionRentaFija extends Inversion{
         this.tasaInteres = 0.20;
     }
 
-     // Getters
+    @Override
+    public double calcularMontoVencimiento(int dias) {
+        double intereses = getMontoInvertido() * (tasaInteres / 365.0) * dias;
+        return getMontoInvertido() + intereses;
+    }
+
+    // Getters
     public Double getTasaInteres(){
         return tasaInteres;
     }

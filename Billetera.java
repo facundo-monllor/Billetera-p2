@@ -402,26 +402,7 @@ public class Billetera implements IBilletera {
     }
 
     private void procesarInversionVencida(Inversion inversion, Cuenta cuenta, Usuario usuario) {
-        int dias = inversion.getPlazo();
-        double montoTotal = 0.0;
-
-        if (inversion instanceof InversionRentaFija) {
-            InversionRentaFija rentaFija = (InversionRentaFija) inversion;
-            double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * dias;
-            montoTotal = rentaFija.getMontoInvertido() + intereses;
-
-        } else if (inversion instanceof InversionVinculadaDivisa) {
-            InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
-            double interesDivisa = divisa.getMontoDivisa() * (divisa.getTasaInteresDivisa() / 365.0) * dias;
-            double totalDivisa = divisa.getMontoDivisa() + interesDivisa;
-            montoTotal = totalDivisa * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
-
-        } else if (inversion instanceof InversionFondoLiquidez) {
-            InversionFondoLiquidez fondoLiquidez = (InversionFondoLiquidez) inversion;
-            double intereses = fondoLiquidez.getMontoInvertido() * (fondoLiquidez.getTasaInteres() / 365.0) * dias;
-            montoTotal = fondoLiquidez.getMontoInvertido() + intereses;
-        }
-
+        double montoTotal = inversion.calcularMontoVencimiento(inversion.getPlazo());
         cuenta.setSaldo(cuenta.getSaldo() + montoTotal);
         inversion.setCobrada(true);
         usuario.sumarInversion(-inversion.getMontoInvertido());

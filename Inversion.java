@@ -45,6 +45,7 @@ public abstract class Inversion extends Operacion{
         cobrada = newCobrada;
     }
 
+    public abstract double calcularMontoVencimiento(int dias);
 
     // to String
     @Override
