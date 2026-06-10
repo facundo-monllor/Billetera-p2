@@ -26,13 +26,7 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("El usuario no existe");
         }
 
-        usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas().values()) {
-                if (cuenta.getAlias().equals(alias)) {
-                    throw new IllegalArgumentException("El alias ya está en uso");
-                }
-            }
-        });
+        validarAliasUnico(alias);
 
         CuentaRegular cuentaRegular = new CuentaRegular(alias);
         Usuario usuario = usuarios.get(dniUsuario);
@@ -46,13 +40,7 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("El usuario no existe");
         }
 
-        usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas().values()) {
-                if (cuenta.getAlias().equals(alias)) {
-                    throw new IllegalArgumentException("El alias ya está en uso");
-                }
-            }
-        });
+        validarAliasUnico(alias);
 
         CuentaPremium cuentaPremium = new CuentaPremium(alias, depositoInicial);
         Usuario usuario = usuarios.get(dniUsuario);
@@ -69,13 +57,7 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("La empresa no existe");
         }
 
-        usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas().values()) {
-                if (cuenta.getAlias().equals(alias)) {
-                    throw new IllegalArgumentException("El alias ya está en uso");
-                }
-            }
-        });
+        validarAliasUnico(alias);
 
         Usuario usuario = usuarios.get(dniUsuario);
         CuentaCorporativa cuentaCorporativa = new CuentaCorporativa(alias, cuitEmpresa);
@@ -83,6 +65,16 @@ public class Billetera implements IBilletera {
 
     
         return cuentaCorporativa.getCVU();
+    }
+    
+    private void validarAliasUnico(String alias) {
+        usuarios.forEach((dni, usuario) -> {                                                                                                           
+            for (Cuenta cuenta : usuario.getCuentas().values()) {                                                                                      
+                if (cuenta.getAlias().equals(alias)) {                                                                                                 
+                    throw new IllegalArgumentException("El alias ya está en uso");                                                                     
+                }                                                                                                                                      
+            }                                                                                                                                          
+        });                                                                                                                                            
     }
 
     public List<String> obtenerCuentas(String dniUsuario) {
@@ -202,8 +194,6 @@ public class Billetera implements IBilletera {
         String cuitEmpresa = cuentaCorporativa.getCuitEmpresa();
 
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();        
-
-
         
         InversionFondoLiquidez inversionFondoLiquidez = new InversionFondoLiquidez(monto, plazoDias, esAprobada);
         cuentaUsuario.getListaOperaciones().add(inversionFondoLiquidez);
@@ -218,15 +208,9 @@ public class Billetera implements IBilletera {
 
     public List<String> consultarHistorialGlobal() {
         List<String> historial = new ArrayList<>();
-
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas().values()) {
-                for (Operacion operacion : cuenta.getListaOperaciones()) {
-                    historial.add(operacion.toString(usuario.getDNI(),cuenta.getCVU()));
-                }
-            }
+            agregarHistorialDeUsuario(usuario, historial);
         }
-
         return historial;
     }
 
@@ -261,14 +245,16 @@ public class Billetera implements IBilletera {
 
         Usuario usuario = usuarios.get(dniUsuario);
         List<String> historial = new ArrayList<>();
+        agregarHistorialDeUsuario(usuario, historial);
+        return historial;
+    }
 
+    private void agregarHistorialDeUsuario(Usuario usuario, List<String> historial) {
         for (Cuenta cuenta : usuario.getCuentas().values()) {
             for (Operacion operacion : cuenta.getListaOperaciones()) {
                 historial.add(operacion.toString(usuario.getDNI(), cuenta.getCVU()));
             }
         }
-
-        return historial;
     }
 
     public double obtenerTotalInvertido(String dniUsuario){
