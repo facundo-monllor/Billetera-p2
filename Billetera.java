@@ -381,45 +381,50 @@ public class Billetera implements IBilletera {
 
     public void procesarInversionesQueVencenHoy() {
         LocalDate hoy = Utilitarios.hoy();
-
+        
         for (Usuario usuario : usuarios.values()) {
             for (Cuenta cuenta : usuario.getCuentas().values()) {
                 for (Operacion operacion : cuenta.getListaOperaciones()) {
+
                     if (operacion instanceof Inversion) {
                         Inversion inversion = (Inversion) operacion;
                         if (inversion.getEstado() && !inversion.getCobrada()) {
-                            
                             LocalDate fechaVencimiento = inversion.getFechaConstitucion().plusDays(inversion.getPlazo());
                             if (fechaVencimiento.isEqual(hoy) || fechaVencimiento.isBefore(hoy)) {
-                                double montoTotal = 0.0;
-                                int dias = inversion.getPlazo();
-
-                                if (inversion instanceof InversionRentaFija) {
-                                    InversionRentaFija rentaFija = (InversionRentaFija) inversion;
-                                    double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * dias;
-                                    montoTotal = rentaFija.getMontoInvertido() + intereses;
-
-                                } else if (inversion instanceof InversionVinculadaDivisa) {
-                                    InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
-                                    double interesDivisa = divisa.getMontoDivisa() * (divisa.getTasaInteresDivisa() / 365.0) * dias;
-                                    double totalDivisa = divisa.getMontoDivisa() + interesDivisa;
-                                    montoTotal = totalDivisa * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
-
-                                } else if (inversion instanceof InversionFondoLiquidez) {
-                                    InversionFondoLiquidez fondoLiquidez = (InversionFondoLiquidez) inversion;
-                                    double intereses = fondoLiquidez.getMontoInvertido() * (fondoLiquidez.getTasaInteres() / 365.0) * dias;
-                                    montoTotal = fondoLiquidez.getMontoInvertido() + intereses;
-
-                                }
-                                cuenta.setSaldo(cuenta.getSaldo() + montoTotal);
-                                inversion.setCobrada(true);
-                                usuario.sumarInversion(-inversion.getMontoInvertido());
+                                procesarInversionVencida(inversion, cuenta, usuario);
                             }
                         }
                     }
+
                 }
             }
         }
+    }
+
+    private void procesarInversionVencida(Inversion inversion, Cuenta cuenta, Usuario usuario) {
+        int dias = inversion.getPlazo();
+        double montoTotal = 0.0;
+
+        if (inversion instanceof InversionRentaFija) {
+            InversionRentaFija rentaFija = (InversionRentaFija) inversion;
+            double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * dias;
+            montoTotal = rentaFija.getMontoInvertido() + intereses;
+
+        } else if (inversion instanceof InversionVinculadaDivisa) {
+            InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
+            double interesDivisa = divisa.getMontoDivisa() * (divisa.getTasaInteresDivisa() / 365.0) * dias;
+            double totalDivisa = divisa.getMontoDivisa() + interesDivisa;
+            montoTotal = totalDivisa * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
+
+        } else if (inversion instanceof InversionFondoLiquidez) {
+            InversionFondoLiquidez fondoLiquidez = (InversionFondoLiquidez) inversion;
+            double intereses = fondoLiquidez.getMontoInvertido() * (fondoLiquidez.getTasaInteres() / 365.0) * dias;
+            montoTotal = fondoLiquidez.getMontoInvertido() + intereses;
+        }
+
+        cuenta.setSaldo(cuenta.getSaldo() + montoTotal);
+        inversion.setCobrada(true);
+        usuario.sumarInversion(-inversion.getMontoInvertido());
     }
 
     @Override
