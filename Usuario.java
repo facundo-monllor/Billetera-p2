@@ -1,7 +1,5 @@
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Usuario {
@@ -12,7 +10,7 @@ public class Usuario {
     private String telefono;
     private Double totalInvertido;
 
-    private List<Cuenta> cuentas;
+    private Map<String, Cuenta> cuentas;
     private Map<String, Boolean> cuitEmpresas;
 
     // Constructor
@@ -28,7 +26,7 @@ public class Usuario {
         this.telefono = telefono;
 
         this.totalInvertido = 0.0;
-        this.cuentas = new ArrayList<>();
+        this.cuentas = new HashMap<>();
         this.cuitEmpresas = new HashMap<>();
     }
 
@@ -39,7 +37,7 @@ public class Usuario {
     public Double getTotalInvertido(){
         return totalInvertido;
     }
-    public List<Cuenta> getCuentas(){
+    public Map<String, Cuenta> getCuentas(){
         return cuentas;
     }
     public Boolean getAutorizadoEmpresa(String CUIT) {

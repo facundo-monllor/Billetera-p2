@@ -27,7 +27,7 @@ public class Billetera implements IBilletera {
         }
 
         usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 if (cuenta.getAlias().equals(alias)) {
                     throw new IllegalArgumentException("El alias ya está en uso");
                 }
@@ -36,7 +36,7 @@ public class Billetera implements IBilletera {
 
         CuentaRegular cuentaRegular = new CuentaRegular(alias);
         Usuario usuario = usuarios.get(dniUsuario);
-        usuario.getCuentas().add(cuentaRegular);
+        usuario.getCuentas().put(cuentaRegular.getCVU(), cuentaRegular);
         
         return cuentaRegular.getCVU();
     }
@@ -47,7 +47,7 @@ public class Billetera implements IBilletera {
         }
 
         usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 if (cuenta.getAlias().equals(alias)) {
                     throw new IllegalArgumentException("El alias ya está en uso");
                 }
@@ -56,7 +56,7 @@ public class Billetera implements IBilletera {
 
         CuentaPremium cuentaPremium = new CuentaPremium(alias, depositoInicial);
         Usuario usuario = usuarios.get(dniUsuario);
-        usuario.getCuentas().add(cuentaPremium);
+        usuario.getCuentas().put(cuentaPremium.getCVU(), cuentaPremium);
     
         return cuentaPremium.getCVU();
     }
@@ -70,16 +70,16 @@ public class Billetera implements IBilletera {
         }
 
         usuarios.forEach((dni, usuario) -> {
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 if (cuenta.getAlias().equals(alias)) {
                     throw new IllegalArgumentException("El alias ya está en uso");
                 }
             }
         });
-        
+
         Usuario usuario = usuarios.get(dniUsuario);
         CuentaCorporativa cuentaCorporativa = new CuentaCorporativa(alias, cuitEmpresa);
-        usuario.getCuentas().add(cuentaCorporativa);
+        usuario.getCuentas().put(cuentaCorporativa.getCVU(), cuentaCorporativa);
 
     
         return cuentaCorporativa.getCVU();
@@ -93,7 +93,7 @@ public class Billetera implements IBilletera {
         Usuario usuario = usuarios.get(dniUsuario);
         List<String> listaFormateada = new ArrayList<>();
 
-        for (Cuenta cuenta : usuario.getCuentas()) {
+        for (Cuenta cuenta : usuario.getCuentas().values()) {
             String cuentaFormateada = cuenta.toString();
             listaFormateada.add(cuentaFormateada);
         }
@@ -103,10 +103,8 @@ public class Billetera implements IBilletera {
     
     public double obtenerSaldoDisponible(String cvu){
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    return cuenta.getSaldo();
-                }
+            if (usuario.getCuentas().containsKey(cvu)) {
+                return usuario.getCuentas().get(cvu).getSaldo();
             }
         }
         throw new IllegalArgumentException("La cuenta no existe");
@@ -119,15 +117,13 @@ public class Billetera implements IBilletera {
         Usuario usuarioOrigen = null;
         Usuario usuarioDestino = null;
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvuOrigen)) {
-                    cuentaOrigen = cuenta;
-                    usuarioOrigen = usuario;
-                }
-                if (cuenta.getCVU().equals(cvuDestino)) {
-                    cuentaDestino = cuenta;
-                    usuarioDestino = usuario;
-                }
+            if (usuario.getCuentas().containsKey(cvuOrigen)) {
+                cuentaOrigen = usuario.getCuentas().get(cvuOrigen);
+                usuarioOrigen = usuario;
+            }
+            if (usuario.getCuentas().containsKey(cvuDestino)) {
+                cuentaDestino = usuario.getCuentas().get(cvuDestino);
+                usuarioDestino = usuario;
             }
         }
         if(cuentaOrigen == null) throw new IllegalArgumentException("La cuenta origen no existe");
@@ -154,16 +150,9 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("El usuario no existe");
         }
         
-        Cuenta cuentaUsuario = null;
         Usuario usuario = usuarios.get(dni);
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    cuentaUsuario = cuenta;
-                }
-            }
-        
-        
-        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
+        Cuenta cuentaUsuario = usuario.getCuentas().get(cvu);
+        if (cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();
 
         InversionRentaFija inversionRentaFija = new InversionRentaFija(monto, plazoDias, esAprobada);
@@ -182,16 +171,9 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("El usuario no existe");
         }
         
-        Cuenta cuentaUsuario = null;
         Usuario usuario = usuarios.get(dni);
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    cuentaUsuario = cuenta;
-                }
-            }
-        
-        
-        if(cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
+        Cuenta cuentaUsuario = usuario.getCuentas().get(cvu);
+        if (cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
         Boolean esAprobada = monto <= cuentaUsuario.getSaldo();
 
         InversionVinculadaDivisa inversionVinculadaDivisa = new InversionVinculadaDivisa(monto, plazoDias, divisa, tasa, esAprobada);
@@ -210,19 +192,11 @@ public class Billetera implements IBilletera {
             throw new IllegalArgumentException("El usuario no existe");
         }
         
-        Cuenta cuentaUsuario = null;
         Usuario usuario = usuarios.get(dni);
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    cuentaUsuario = cuenta;
-                }
-            }
-        
+        Cuenta cuentaUsuario = usuario.getCuentas().get(cvu);
+        if (cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
         if (!(cuentaUsuario instanceof CuentaCorporativa)) {
             throw new IllegalArgumentException("La cuenta no es corporativa");
-        }
-        if(cuentaUsuario == null) {
-            throw new IllegalArgumentException("La cuenta no existe");
         }
         CuentaCorporativa cuentaCorporativa = (CuentaCorporativa) cuentaUsuario;
         String cuitEmpresa = cuentaCorporativa.getCuitEmpresa();
@@ -246,7 +220,7 @@ public class Billetera implements IBilletera {
         List<String> historial = new ArrayList<>();
 
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 for (Operacion operacion : cuenta.getListaOperaciones()) {
                     historial.add(operacion.toString(usuario.getDNI(),cuenta.getCVU()));
                 }
@@ -263,11 +237,9 @@ public class Billetera implements IBilletera {
         Usuario usuarioCuenta = null;
 
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    cuentaEncontrada = cuenta;
-                    usuarioCuenta = usuario;
-                }
+            if (usuario.getCuentas().containsKey(cvu)) {
+                cuentaEncontrada = usuario.getCuentas().get(cvu);
+                usuarioCuenta = usuario;
             }
         }
 
@@ -290,7 +262,7 @@ public class Billetera implements IBilletera {
         Usuario usuario = usuarios.get(dniUsuario);
         List<String> historial = new ArrayList<>();
 
-        for (Cuenta cuenta : usuario.getCuentas()) {
+        for (Cuenta cuenta : usuario.getCuentas().values()) {
             for (Operacion operacion : cuenta.getListaOperaciones()) {
                 historial.add(operacion.toString(usuario.getDNI(), cuenta.getCVU()));
             }
@@ -315,9 +287,7 @@ public class Billetera implements IBilletera {
 
         List<Cuenta> cuentas = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                cuentas.add(cuenta);
-            }
+            cuentas.addAll(usuario.getCuentas().values());
         }
 
         cuentas.sort((cuentaA, cuentaB) -> 
@@ -338,9 +308,9 @@ public class Billetera implements IBilletera {
     }
 
     public String consultarCvu(String alias){
-         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
-                if(cuenta.getAlias().equals(alias)){
+        for (Usuario usuario : usuarios.values()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
+                if (cuenta.getAlias().equals(alias)) {
                     return cuenta.getCVU();
                 }
             }
@@ -383,15 +353,8 @@ public class Billetera implements IBilletera {
         }
 
         Usuario usuario = usuarios.get(dni);
-        Cuenta cuentaUsuario = null;
-        for (Cuenta cuenta : usuario.getCuentas()) {
-                if (cuenta.getCVU().equals(cvu)) {
-                    cuentaUsuario = cuenta;
-                }
-            }
-        if(cuentaUsuario == null) {
-            throw new IllegalArgumentException("La cuenta no existe");
-        }
+        Cuenta cuentaUsuario = usuario.getCuentas().get(cvu);
+        if (cuentaUsuario == null) throw new IllegalArgumentException("La cuenta no existe");
 
         Operacion operacion = operaciones.get(idInversion);
         if(!operacion.getEstado()){
@@ -434,7 +397,7 @@ public class Billetera implements IBilletera {
         LocalDate hoy = Utilitarios.hoy();
 
         for (Usuario usuario : usuarios.values()) {
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 for (Operacion operacion : cuenta.getListaOperaciones()) {
                     if (operacion instanceof Inversion) {
                         Inversion inversion = (Inversion) operacion;
@@ -481,7 +444,7 @@ public class Billetera implements IBilletera {
         sb.append("\nUSUARIOS (").append(usuarios.size()).append("):\n");
         for (Usuario usuario : usuarios.values()) {
             sb.append("  ").append(usuario).append("\n");
-            for (Cuenta cuenta : usuario.getCuentas()) {
+            for (Cuenta cuenta : usuario.getCuentas().values()) {
                 sb.append(cuenta.toString());
                 sb.append(" - Saldo: $").append(cuenta.getSaldo()).append("\n");
             }
