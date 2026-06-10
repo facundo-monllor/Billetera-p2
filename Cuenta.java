@@ -47,7 +47,7 @@ public abstract class Cuenta {
     // to String
     @Override
     public String toString() {
-        return "CVU: " + CVU + " alias: " + alias + " saldo: " + saldo + "listaOperaciones:" + listaOperaciones;
+        return getClass().getSimpleName() + ": " + getAlias() + " (" + getCVU() + ")";
     }
 
     public void validarLimiteRecepcion(Double montoAAcreditar) {

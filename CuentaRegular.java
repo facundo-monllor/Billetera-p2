@@ -12,7 +12,7 @@ public class CuentaRegular extends Cuenta{
     // to String
     @Override
     public String toString() {
-        return super.toString() + " SaldoMaximo: " + saldoMaximo;
+        return super.toString();
     }
 
 

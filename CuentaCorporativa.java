@@ -18,7 +18,7 @@ public class CuentaCorporativa extends Cuenta{
     // to String
     @Override
     public String toString() {
-        return super.toString() + " CuitEmpresa: " + cuitEmpresa;
+        return super.toString();
     }
     
 }

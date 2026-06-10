@@ -94,7 +94,7 @@ public class Billetera implements IBilletera {
         List<String> listaFormateada = new ArrayList<>();
 
         for (Cuenta cuenta : usuario.getCuentas()) {
-            String cuentaFormateada = cuenta.getClass().getSimpleName() + ": " + cuenta.getAlias() + " (" + cuenta.getCVU() + ")";
+            String cuentaFormateada = cuenta.toString();
             listaFormateada.add(cuentaFormateada);
         }
 
@@ -331,7 +331,7 @@ public class Billetera implements IBilletera {
         List<String> listaFormateada = new ArrayList<>();
         for (int i = 0; i < cantidadTop && i < cuentas.size(); i++) {
             Cuenta cuenta = cuentas.get(i);
-            listaFormateada.add(cuenta.getClass().getSimpleName() + ": " + cuenta.getAlias() + " (" + cuenta.getCVU() + ")");
+            listaFormateada.add(cuenta.toString());
         }
 
         return listaFormateada;
@@ -371,7 +371,7 @@ public class Billetera implements IBilletera {
             }
         }
 
-        autorizados.add(dniAutorizado);
+        empresa.getUsuariosDNI().add(dniAutorizado);
     };
 
     public void precancelarInversion(String dni, String cvu, int idInversion){
@@ -482,8 +482,7 @@ public class Billetera implements IBilletera {
         for (Usuario usuario : usuarios.values()) {
             sb.append("  ").append(usuario).append("\n");
             for (Cuenta cuenta : usuario.getCuentas()) {
-                sb.append("    [").append(cuenta.getClass().getSimpleName()).append("] ");
-                sb.append(cuenta.getAlias()).append(" (").append(cuenta.getCVU()).append(")");
+                sb.append(cuenta.toString());
                 sb.append(" - Saldo: $").append(cuenta.getSaldo()).append("\n");
             }
         }

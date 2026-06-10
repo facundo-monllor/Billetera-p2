@@ -12,7 +12,7 @@ public class CuentaPremium extends Cuenta{
     // to String
     @Override
     public String toString() {
-        return super.toString() + " MontoMinimo: " + montoMinimo;
+        return super.toString();
     }
 
 }
