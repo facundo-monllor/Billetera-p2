@@ -47,6 +47,8 @@ public abstract class Inversion extends Operacion{
 
     public abstract double calcularMontoVencimiento(int dias);
 
+    public abstract double calcularMontoPrecancelacion(long diasPasados);
+
     // to String
     @Override
     public String toString(String dniContexto, String cvuContexto) {

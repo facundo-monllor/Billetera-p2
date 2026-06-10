@@ -24,6 +24,13 @@ public class InversionVinculadaDivisa extends Inversion{
         return totalDivisa * Utilitarios.consultarCotizacion(nombreDivisa);
     }
 
+    @Override
+    public double calcularMontoPrecancelacion(long diasPasados) {
+        double interesesDivisa = montoDivisa * (tasaInteresDivisa / 365.0) * diasPasados;
+        double totalDivisa = montoDivisa + (interesesDivisa / 2.0);
+        return totalDivisa * Utilitarios.consultarCotizacion(nombreDivisa);
+    }
+
     // Getters
     public Double getTasaInteresDivisa(){
         return tasaInteresDivisa;

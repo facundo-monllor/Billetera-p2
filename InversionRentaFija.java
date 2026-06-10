@@ -17,6 +17,12 @@ public class InversionRentaFija extends Inversion{
         return getMontoInvertido() + intereses;
     }
 
+    @Override
+    public double calcularMontoPrecancelacion(long diasPasados) {
+        double intereses = getMontoInvertido() * (tasaInteres / 365.0) * diasPasados;
+        return getMontoInvertido() + (intereses / 2.0);
+    }
+
     // Getters
     public Double getTasaInteres(){
         return tasaInteres;

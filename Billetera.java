@@ -361,20 +361,7 @@ public class Billetera implements IBilletera {
                 inversion.setCobrada(true);
 
                 long diasPasados = ChronoUnit.DAYS.between(inversion.getFechaConstitucion(), Utilitarios.hoy());
-                double montoADevolver = 0.0;
-
-                if (inversion instanceof InversionRentaFija) {
-                InversionRentaFija rentaFija = (InversionRentaFija) inversion;
-                double intereses = rentaFija.getMontoInvertido() * (rentaFija.getTasaInteres() / 365.0) * diasPasados;
-                montoADevolver = rentaFija.getMontoInvertido() + (intereses / 2.0);
-
-                } else if (inversion instanceof InversionVinculadaDivisa) {
-                InversionVinculadaDivisa divisa = (InversionVinculadaDivisa) inversion;
-                double dolaresOriginales = divisa.getMontoDivisa(); 
-                double interesesDolares = dolaresOriginales * (divisa.getTasaInteresDivisa() / 365.0) * diasPasados;
-                double totalDolares = dolaresOriginales + (interesesDolares / 2.0);
-                montoADevolver = totalDolares * Utilitarios.consultarCotizacion(divisa.getNombreDivisa());
-                }
+                double montoADevolver = inversion.calcularMontoPrecancelacion(diasPasados);
                 cuentaUsuario.setSaldo(cuentaUsuario.getSaldo() + montoADevolver);
         }
     };

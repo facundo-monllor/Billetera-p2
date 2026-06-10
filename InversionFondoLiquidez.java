@@ -18,6 +18,11 @@ public class InversionFondoLiquidez extends Inversion{
         return getMontoInvertido() + intereses;
     }
 
+    @Override
+    public double calcularMontoPrecancelacion(long diasPasados) {
+        throw new UnsupportedOperationException("El fondo de liquidez no es precancelable");
+    }
+
     public Double getTasaInteres() {
         return tasaInteres;
     }
